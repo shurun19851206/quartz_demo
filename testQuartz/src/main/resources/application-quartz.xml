@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Job实现的配置 -->
+	<bean id="myJob" class="testQuartz.MyJob"></bean>
+
+	<!-- Job定义 -->
+	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="myJob" />
+ 		<property name="targetMethod" value="execute" />
+	</bean>
+
+	<!-- 触发器定义 -->
+	<bean id="cronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="jobDetail" />
+		<property name="cronExpression" value="*/5 * * * * ?" />
+	</bean>
+
+	<!-- 定时任务 -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="jobDetail" />
+			</list>
+		</property>
+
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+	</bean>
+	 -->
+	<!-- 自定义定时任务 -->
+	<bean id="myScheduler" class="testQuartz.MyTestCopySchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="jobDetail" />
+			</list>
+		</property>
+
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>
